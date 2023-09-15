@@ -13,11 +13,12 @@ public class GenericExceptionMapper implements ExceptionMapper<Exception> {
 
     public GenericExceptionMapper() {
     }
+
     @Override
     public Response toResponse(Exception exception) {
         if (exception instanceof WebApplicationException webApplicationException) {
             var response = webApplicationException.getResponse();
-            if(response.getStatus() != HttpStatus.INTERNAL_SERVER_ERROR_500.getStatusCode()){
+            if (response.getStatus() != HttpStatus.INTERNAL_SERVER_ERROR_500.getStatusCode()) {
                 return Response.status(response.getStatus()).entity(new ErrorResponse(response.getStatus(), exception.getMessage(), DESCRIPTION)).type(MediaType.APPLICATION_JSON_TYPE).build();
             }
         }

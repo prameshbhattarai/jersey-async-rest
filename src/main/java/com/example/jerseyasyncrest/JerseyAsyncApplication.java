@@ -8,6 +8,7 @@ import java.io.IOException;
 public class JerseyAsyncApplication {
 
     public static final String URL = "http://localhost:8080";
+
     public static void main(String... args) throws IOException, InterruptedException {
 
         var app = new ApplicationConfig()
