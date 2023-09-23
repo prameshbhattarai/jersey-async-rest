@@ -1,6 +1,8 @@
 plugins {
     id 'java'
+    id "application"
 }
+apply plugin : "java"
 
 group 'com.example'
 version '1.0-SNAPSHOT'
@@ -10,6 +12,7 @@ repositories {
 }
 
 ext {
+    javaMainClass = 'com.example.jerseyasyncrest.JerseyAsyncApplication'
     junitVersion = '5.9.2'
 }
 
@@ -18,14 +21,19 @@ java {
     targetCompatibility = '17'
 }
 
+application {
+    mainClassName = javaMainClass
+}
+
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
 }
 
 jar {
+    archiveFileName.set("jerseyAsyncApp.jar")
     manifest {
         attributes(
-                'Main-Class': 'com.example.jerseyasyncrest.JerseyAsyncApplication'
+                'Main-Class': javaMainClass
         )
     }
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
