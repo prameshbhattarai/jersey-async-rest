@@ -16,6 +16,7 @@ public class JerseyAsyncApplication {
                 .enableJackson()
                 .registerDefaultMappers()
                 .build();
+
         // scan resources packages
         app.packages("com.example.jerseyasyncrest.resources");
 

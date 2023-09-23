@@ -3,7 +3,7 @@
     <Appenders>
         <Console name="Console">
             <JsonTemplateLayout eventTemplateUri="classpath:LogJsonLayout.json">
-                <EventTemplateAdditionalField key="serviceName" value="export"/>
+                <EventTemplateAdditionalField key="serviceName" value="JerseyAsyncRest"/>
             </JsonTemplateLayout>
             <Filters>
                 <MarkerFilter marker="MAP_MESSAGE" onMatch="DENY" onMismatch="ACCEPT"/>
@@ -11,7 +11,7 @@
         </Console>
         <Console name="ConsoleMapMessage">
             <JsonTemplateLayout eventTemplateUri="classpath:LogJsonLayoutMapMessage.json">
-                <EventTemplateAdditionalField key="serviceName" value="export"/>
+                <EventTemplateAdditionalField key="serviceName" value="JerseyAsyncRest"/>
             </JsonTemplateLayout>
             <Filters>
                 <MarkerFilter marker="MAP_MESSAGE" onMatch="ACCEPT" onMismatch="DENY"/>
