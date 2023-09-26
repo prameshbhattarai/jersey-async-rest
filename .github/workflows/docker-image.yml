@@ -9,9 +9,7 @@ on:
       - 'main'
 
 jobs:
-
   build:
-
     runs-on: ubuntu-latest
 
     steps:
@@ -25,5 +23,6 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
+          file: ./Dockerfile
           push: false
           tags: jersey-async-rest/jersey_async_app:latest
