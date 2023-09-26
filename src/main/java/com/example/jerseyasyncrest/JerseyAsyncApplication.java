@@ -1,5 +1,6 @@
 package com.example.jerseyasyncrest;
 
+import com.example.jerseyasyncrest.handler.CORSFilter;
 import jakarta.ws.rs.core.UriBuilder;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 
@@ -16,6 +17,9 @@ public class JerseyAsyncApplication {
                 .enableJackson()
                 .registerDefaultMappers()
                 .build();
+
+        // enable CORS request
+        app.register(CORSFilter.class);
 
         // scan resources packages
         app.packages("com.example.jerseyasyncrest.resources");

@@ -56,5 +56,6 @@ build and run application from gradle
 run application from docker
 ```bash
 docker build -t jersey_async_app .  
+docker container rm jersey_async_app
 docker run --name jersey_async_app -p 8080:8080 jersey_async_app
 ```
