@@ -1,5 +1,5 @@
 # Use an official OpenJDK runtime as a base image
-FROM amazoncorretto:17.0.8-al2023
+FROM amazoncorretto:21-al2023
 
 # Set the working directory inside the container
 WORKDIR /app

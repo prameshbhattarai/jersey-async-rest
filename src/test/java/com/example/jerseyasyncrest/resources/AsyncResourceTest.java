@@ -1,6 +1,7 @@
 package com.example.jerseyasyncrest.resources;
 
-import com.example.jerseyasyncrest.dto.Data;
+import com.example.jerseyasyncrest.dto.AsyncResponse;
+import com.example.jerseyasyncrest.service.AsyncService;
 import jakarta.ws.rs.core.Application;
 import jakarta.ws.rs.core.HttpHeaders;
 import jakarta.ws.rs.core.MediaType;
@@ -21,7 +22,12 @@ class AsyncResourceTest extends JerseyTest {
 
     @Override
     protected Application configure() {
-        return new ResourceConfig(AsyncResource.class);
+        return new ResourceConfig()
+                .registerInstances(
+                        new AsyncResource(
+                                new AsyncService()
+                        )
+                );
     }
 
     @Test
@@ -31,18 +37,26 @@ class AsyncResourceTest extends JerseyTest {
         assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
         assertEquals(MediaType.APPLICATION_JSON, response.getHeaderString(HttpHeaders.CONTENT_TYPE));
 
-        Data data = response.readEntity(Data.class);
-        assertEquals("pong", data.message());
+        AsyncResponse asyncResponse = response.readEntity(AsyncResponse.class);
+        assertEquals("pong", asyncResponse.message());
     }
 
     @Test
     void asyncRequestShouldWaitAndReturnSuccessResponseWith200Status() {
-        var response = target("/api").request().get();
+        var response = target("/api/async-ping").request().get();
 
         assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
         assertEquals(MediaType.APPLICATION_JSON, response.getHeaderString(HttpHeaders.CONTENT_TYPE));
 
-        Data data = response.readEntity(Data.class);
-        assertEquals("Response from async operation !!!", data.message());
+        AsyncResponse asyncResponse = response.readEntity(AsyncResponse.class);
+        assertEquals("Response from async-ping operation !!!", asyncResponse.message());
+    }
+
+    @Test
+    void streamRequestShouldReturnSuccessResponseWith200Status() {
+        var response = target("/api/stream").request().get();
+
+        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+        assertEquals("text/csv", response.getHeaderString(HttpHeaders.CONTENT_TYPE));
     }
 }

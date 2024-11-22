@@ -17,7 +17,7 @@ public class AsyncCompletionHandler {
     private AsyncCompletionHandler() {
     }
 
-    public static CompletableFuture<Response> handle(
+    public static void handle(
             ContainerRequest request,
             AsyncResponse response,
             CompletableFuture<Response> completableFuture
@@ -30,17 +30,17 @@ public class AsyncCompletionHandler {
             logger.warn("Request timed out {}", request);
         });
 
-        return completableFuture.whenComplete(
-                (attempt, exception) -> {
-                    if (exception != null) {
-                        if (!response.isSuspended())
-                            logger.error("Unreported error {}", request, exception);
-                        if (exception instanceof CompletionException)
-                            response.resume(exception.getCause());
-                        else
-                            response.resume(exception);
-                    } else
-                        response.resume(attempt);
-                });
+        completableFuture.whenComplete(
+            (attempt, exception) -> {
+                if (exception != null) {
+                    if (!response.isSuspended())
+                        logger.error("Unreported error {}", request, exception);
+                    if (exception instanceof CompletionException)
+                        response.resume(exception.getCause());
+                    else
+                        response.resume(exception);
+                } else
+                    response.resume(attempt);
+            });
     }
 }

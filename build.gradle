@@ -1,8 +1,8 @@
 plugins {
     id 'java'
     id "application"
+    id 'com.github.ben-manes.versions' version '0.51.0'
 }
-apply plugin : "java"
 
 group 'com.example'
 version '1.0-SNAPSHOT'
@@ -13,7 +13,9 @@ repositories {
 
 ext {
     javaMainClass = 'com.example.jerseyasyncrest.JerseyAsyncApplication'
-    junitVersion = '5.9.2'
+    junitVersion = '5.11.3'
+    log4jVersion = '3.0.0-beta2'
+    jerseyVersion = '4.0.0-M1'
 }
 
 java {
@@ -22,10 +24,10 @@ java {
 }
 
 application {
-    mainClassName = javaMainClass
+    mainClass = javaMainClass
 }
 
-tasks.withType(JavaCompile) {
+tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
 }
 
@@ -44,22 +46,21 @@ jar {
 }
 
 dependencies {
-    implementation "org.glassfish.jersey.containers:jersey-container-grizzly2-servlet:3.1.3"
-    implementation "org.glassfish.jersey.inject:jersey-hk2:3.1.3"
-    implementation "org.glassfish.jersey.media:jersey-media-json-jackson:3.1.3"
-    implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.15.2"
+    implementation "org.glassfish.jersey.containers:jersey-container-grizzly2-servlet:${jerseyVersion}"
+    implementation "org.glassfish.jersey.inject:jersey-hk2:${jerseyVersion}"
+    implementation "org.glassfish.jersey.media:jersey-media-json-jackson:${jerseyVersion}"
+    implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.18.1"
     implementation "org.glassfish.jaxb:jaxb-runtime:4.0.3"
-    implementation "org.glassfish.jersey.media:jersey-media-json-jackson:3.1.3"
 
-    implementation "org.apache.commons:commons-lang3:3.12.0"
-    implementation "org.apache.logging.log4j:log4j-api:2.20.0"
-    implementation "org.apache.logging.log4j:log4j-core:2.20.0"
-    implementation "org.apache.logging.log4j:log4j-layout-template-json:2.20.0"
-    implementation "org.apache.logging.log4j:log4j-jul:2.20.0"
-    implementation "org.apache.logging.log4j:log4j-slf4j-impl:2.20.0"
+    implementation "org.apache.commons:commons-lang3:3.17.0"
+    implementation "org.apache.logging.log4j:log4j-api:${log4jVersion}"
+    implementation "org.apache.logging.log4j:log4j-core:${log4jVersion}"
+    implementation "org.apache.logging.log4j:log4j-layout-template-json:${log4jVersion}"
+    implementation "org.apache.logging.log4j:log4j-jul:${log4jVersion}"
+    implementation "org.apache.logging.log4j:log4j-slf4j-impl:${log4jVersion}"
 
-    testImplementation("org.glassfish.jersey.test-framework:jersey-test-framework-core:3.1.3")
-    testImplementation("org.glassfish.jersey.test-framework.providers:jersey-test-framework-provider-grizzly2:3.1.3")
+    testImplementation("org.glassfish.jersey.test-framework:jersey-test-framework-core:${jerseyVersion}")
+    testImplementation("org.glassfish.jersey.test-framework.providers:jersey-test-framework-provider-grizzly2:${jerseyVersion}")
     testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
 }

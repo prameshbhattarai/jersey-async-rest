@@ -1,12 +1,12 @@
 package com.example.jerseyasyncrest.resources;
 
-import com.example.jerseyasyncrest.dto.Data;
+import com.example.jerseyasyncrest.dto.AsyncResponse;
 import com.example.jerseyasyncrest.handler.AsyncCompletionHandler;
+import com.example.jerseyasyncrest.service.AsyncService;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
-import jakarta.ws.rs.container.AsyncResponse;
 import jakarta.ws.rs.container.Suspended;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
@@ -15,49 +15,47 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.glassfish.jersey.server.ContainerRequest;
 
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Executors;
-
 @Path("/api")
 @Consumes({MediaType.APPLICATION_JSON})
 @Produces({MediaType.APPLICATION_JSON})
 public class AsyncResource {
+    private static final Logger logger = LogManager.getLogger(AsyncResource.class);
+    private final AsyncService asyncService;
 
-    public static final Logger logger = LogManager.getLogger(AsyncResource.class);
-    private static final int SLEEP = 4 * 1000;
+    public AsyncResource(AsyncService asyncService) {
+        this.asyncService = asyncService;
+    }
 
     @GET()
     @Path("/ping")
     public Response ping() {
         logger.info("ping request received");
         return Response
-                .ok(new Data("pong"))
+                .ok(new AsyncResponse("pong"))
                 .build();
     }
 
     @GET
-    public void async(@Suspended AsyncResponse asyncResponse,
+    @Path("/async-ping")
+    public void async(@Suspended jakarta.ws.rs.container.AsyncResponse asyncResponse,
                       @Context ContainerRequest request) {
         logger.info("Async request received");
         AsyncCompletionHandler.handle(
                 request,
                 asyncResponse,
-                createFutureResponse()
+                asyncService.createFutureResponse()
         );
     }
 
-    private CompletableFuture<Response> createFutureResponse() {
-        var completableFuture = new CompletableFuture<Response>();
-        Executors.newCachedThreadPool().submit(() -> {
-            Thread.sleep(SLEEP);
-            logger.info("Async operation completed");
-            completableFuture.complete(
-                    Response.ok()
-                            .entity(new Data("Response from async operation !!!"))
-                            .build()
-            );
-            return null;
-        });
-        return completableFuture;
+    @GET
+    @Path("/stream")
+    public void stream(@Suspended jakarta.ws.rs.container.AsyncResponse asyncResponse,
+                       @Context ContainerRequest request) {
+        logger.info("Stream request received");
+        AsyncCompletionHandler.handle(
+                request,
+                asyncResponse,
+                asyncService.createFutureStreamResponse()
+        );
     }
 }
